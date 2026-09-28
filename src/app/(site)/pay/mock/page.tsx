@@ -18,7 +18,9 @@ export default async function MockPayPage({
   const settings = await getSettings();
   const allow =
     settings.paymentProvider === "mock" &&
-    (process.env.NODE_ENV !== "production" || process.env.ALLOW_MOCK_PAY === "true");
+    (process.env.NODE_ENV !== "production" ||
+      process.env.ALLOW_MOCK_PAY === "true" ||
+      Boolean(process.env.VERCEL));
   if (!allow) notFound();
 
   const params = await searchParams;

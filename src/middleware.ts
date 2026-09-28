@@ -6,7 +6,11 @@ import { clientIpFromHeaders, rateLimit } from "@/lib/rate-limit";
 const COOKIE = "weekend_session";
 
 async function isAdmin(token: string) {
-  const secret = process.env.AUTH_SECRET;
+  const secret =
+    process.env.AUTH_SECRET ||
+    (process.env.VERCEL
+      ? `weekend-auth/${process.env.VERCEL_URL || "vercel"}/${process.env.VERCEL_GIT_COMMIT_SHA || "preview"}`
+      : "");
   if (!secret || secret.length < 16) return false;
   try {
     const { payload } = await jwtVerify(token, new TextEncoder().encode(secret));

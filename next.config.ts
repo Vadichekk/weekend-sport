@@ -2,6 +2,9 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
+  outputFileTracingIncludes: {
+    "/**": ["./prisma/dev.db", "./prisma/schema.prisma"],
+  },
   images: {
     formats: ["image/avif", "image/webp"],
   },

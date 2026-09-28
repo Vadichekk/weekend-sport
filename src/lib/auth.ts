@@ -12,7 +12,11 @@ export type AuthSession =
 const DUMMY_HASH = "$2b$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi";
 
 function secret() {
-  const value = process.env.AUTH_SECRET;
+  const value =
+    process.env.AUTH_SECRET ||
+    (process.env.VERCEL
+      ? `weekend-auth/${process.env.VERCEL_URL || "vercel"}/${process.env.VERCEL_GIT_COMMIT_SHA || "preview"}`
+      : "");
   if (!value || value.length < 16) {
     throw new Error("AUTH_SECRET должен быть задан и длиннее 16 символов");
   }

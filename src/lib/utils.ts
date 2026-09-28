@@ -105,7 +105,13 @@ export function orderNumber() {
 }
 
 export function appUrl() {
-  return process.env.APP_URL?.replace(/\/$/, "") || "http://localhost:3000";
+  const configured = process.env.APP_URL?.replace(/\/$/, "");
+  if (configured && !configured.includes("localhost")) return configured;
+  if (process.env.VERCEL_PROJECT_PRODUCTION_URL) {
+    return `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`;
+  }
+  if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
+  return configured || "http://localhost:3000";
 }
 
 export function spotsLabel(count: number) {

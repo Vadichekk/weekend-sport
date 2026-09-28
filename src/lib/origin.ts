@@ -1,20 +1,18 @@
 import { headers } from "next/headers";
 import { appUrl } from "@/lib/utils";
 
-function configuredOrigin() {
-  return appUrl().replace(/\/$/, "");
+function isAllowedHost(host: string) {
+  const configured = appUrl().replace(/^https?:\/\//, "").split("/")[0];
+  if (host === configured) return true;
+  return host.endsWith(".vercel.app");
 }
 
 export async function requestOrigin() {
-  const configured = configuredOrigin();
-  if (process.env.NODE_ENV === "production") {
-    return configured;
-  }
-
   const store = await headers();
-  const host = store.get("x-forwarded-host") || store.get("host") || "";
-  const local = host.startsWith("localhost") || host.startsWith("127.0.0.1");
-  if (!local) return configured;
-  const proto = store.get("x-forwarded-proto") || "http";
-  return `${proto}://${host}`;
+  const host = (store.get("x-forwarded-host") || store.get("host") || "").split(",")[0].trim();
+  const proto = store.get("x-forwarded-proto") || (host.includes("localhost") ? "http" : "https");
+  if (host && isAllowedHost(host)) {
+    return `${proto}://${host}`;
+  }
+  return appUrl();
 }

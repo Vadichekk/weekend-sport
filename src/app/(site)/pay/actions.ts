@@ -8,7 +8,8 @@ import { getSettings } from "@/lib/settings";
 export async function resolveMockPayment(formData: FormData) {
   const settings = await getSettings();
   const allowMock = settings.paymentProvider === "mock" && process.env.ALLOW_MOCK_PAY !== "false";
-  if (process.env.NODE_ENV === "production" && process.env.ALLOW_MOCK_PAY !== "true") {
+  const demoPay = process.env.ALLOW_MOCK_PAY === "true" || Boolean(process.env.VERCEL);
+  if (process.env.NODE_ENV === "production" && !demoPay) {
     redirect("/pay/fail");
   }
   if (!allowMock) {

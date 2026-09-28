@@ -1,0 +1,4 @@
+{
+  "framework": "nextjs",
+  "buildCommand": "DATABASE_URL=file:./dev.db prisma generate && DATABASE_URL=file:./dev.db prisma db push --accept-data-loss && DATABASE_URL=file:./dev.db npx tsx prisma/seed.ts && next build"
+}
