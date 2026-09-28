@@ -1,0 +1,91 @@
+@import "tailwindcss";
+
+:root {
+  --bg: #f4efe6;
+  --bg-deep: #ece4d6;
+  --ink: #1c241f;
+  --muted: #5d675f;
+  --line: rgba(28, 36, 31, 0.12);
+  --forest: #1e3b31;
+  --forest-soft: #2f5648;
+  --moss: #4d7a63;
+  --clay: #c56a45;
+  --clay-deep: #a65333;
+  --cream: #f7f2e9;
+  --paper: #fffcf7;
+  --shadow: 0 18px 50px rgba(30, 59, 49, 0.12);
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-bg-deep: var(--bg-deep);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-forest: var(--forest);
+  --color-forest-soft: var(--forest-soft);
+  --color-moss: var(--moss);
+  --color-clay: var(--clay);
+  --color-clay-deep: var(--clay-deep);
+  --color-cream: var(--cream);
+  --color-paper: var(--paper);
+  --font-sans: var(--font-manrope);
+  --font-display: var(--font-fraunces);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-manrope), system-ui, sans-serif;
+}
+
+h1,
+h2,
+h3,
+.font-display {
+  font-family: var(--font-fraunces), Georgia, "Times New Roman", serif;
+  font-optical-sizing: auto;
+  letter-spacing: -0.03em;
+}
+
+h1 {
+  font-weight: 600;
+}
+
+a {
+  color: inherit;
+}
+
+::selection {
+  background: #d7c4a6;
+  color: var(--ink);
+}
+
+.noise {
+  position: relative;
+}
+
+.noise::after {
+  content: "";
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  opacity: 0.045;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.editorial-grid {
+  display: grid;
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
+  .editorial-grid {
+    grid-template-columns: 1.3fr 0.7fr;
+    grid-template-rows: auto auto;
+  }
+}

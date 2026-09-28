@@ -1,0 +1,137 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Location {
+  id               String    @id @default(cuid())
+  slug             String    @unique
+  name             String
+  district         String
+  address          String
+  shortDescription String
+  description      String
+  conditions       String
+  safety           String
+  ageMin           Int
+  ageMax           Int
+  amenities        String
+  coverImage       String
+  website          String    @default("")
+  published        Boolean   @default(false)
+  sortOrder        Int       @default(0)
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  media            Media[]
+  sessions         Session[]
+}
+
+model Media {
+  id         String    @id @default(cuid())
+  locationId String?
+  location   Location? @relation(fields: [locationId], references: [id], onDelete: Cascade)
+  kind       String
+  url        String
+  posterUrl  String?
+  alt        String
+  caption    String    @default("")
+  category   String    @default("stay")
+  sortOrder  Int       @default(0)
+  isShared   Boolean   @default(false)
+}
+
+model Session {
+  id            String      @id @default(cuid())
+  locationId    String
+  location      Location    @relation(fields: [locationId], references: [id], onDelete: Cascade)
+  startDate     DateTime
+  endDate       DateTime
+  pricePerChild Int
+  capacity      Int
+  spotsLeft     Int
+  status        String      @default("open")
+  published     Boolean     @default(true)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  items         OrderItem[]
+}
+
+model Parent {
+  id           String   @id @default(cuid())
+  name         String
+  phone        String   @unique
+  email        String?
+  passwordHash String
+  createdAt    DateTime @default(now())
+  orders       Order[]
+}
+
+model Order {
+  id              String         @id @default(cuid())
+  publicNumber    String         @unique
+  parentId        String
+  parent          Parent         @relation(fields: [parentId], references: [id], onDelete: Cascade)
+  parentName      String
+  parentPhone     String
+  parentEmail     String?
+  pdnConsent      Boolean
+  status          String         @default("pending")
+  totalAmount     Int
+  paymentId       String?
+  paymentProvider String?
+  idempotencyKey  String         @unique
+  amoLeadIds      String         @default("[]")
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  items           OrderItem[]
+  paymentEvents   PaymentEvent[]
+  amoJobs         AmoJob[]
+}
+
+model OrderItem {
+  id        String  @id @default(cuid())
+  orderId   String
+  order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  sessionId String
+  session   Session @relation(fields: [sessionId], references: [id])
+  children  String
+  quantity  Int
+  priceEach Int
+}
+
+model PaymentEvent {
+  id        String   @id @default(cuid())
+  eventKey  String   @unique
+  orderId   String
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  status    String
+  payload   String
+  createdAt DateTime @default(now())
+}
+
+model AmoJob {
+  id        String    @id @default(cuid())
+  orderId   String
+  order     Order     @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  payload   String
+  status    String    @default("pending")
+  attempts  Int       @default(0)
+  lastError String?
+  nextRetry DateTime?
+  createdAt DateTime  @default(now())
+}
+
+model AdminUser {
+  id           String @id @default(cuid())
+  email        String @unique
+  passwordHash String
+}
+
+model Setting {
+  key   String @id
+  value String
+}

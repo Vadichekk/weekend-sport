@@ -1,0 +1,17 @@
+node_modules
+.next
+out
+dist
+.vercel
+*.log
+.env
+.env.local
+prisma/dev.db
+prisma/dev.db-journal
+public/uploads/*
+!public/uploads/.gitkeep
+# исходники до сжатия — на сайте используются public/media
+/media
+.DS_Store
+Thumbs.db
+tsconfig.tsbuildinfo
